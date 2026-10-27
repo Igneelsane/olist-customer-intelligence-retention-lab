@@ -1,0 +1,18 @@
+# Customer Intelligence & Retention Lab -- pinned, free/open-source dependencies only.
+# No paid API, SaaS or proprietary package is required.
+
+pandas==2.2.3
+numpy==2.3.5
+scipy==1.17.1
+scikit-learn==1.6.1
+plotly==6.0.1
+streamlit==1.66.1
+matplotlib==3.10.9
+seaborn==0.13.2
+
+# Development / testing
+pytest==9.0.3
+
+# Notebook environment (exploratory analysis)
+jupyterlab>=4.2
+ipykernel>=6.29

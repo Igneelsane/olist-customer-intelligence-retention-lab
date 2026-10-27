@@ -1,0 +1,51 @@
+# ---- data (never commit the raw dataset or derived records) ----
+data/raw/*.csv
+data/raw/*.zip
+data/processed/*.parquet
+data/processed/*.csv
+data/**/archive/
+
+# keep the folders themselves
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# ---- secrets / local config ----
+.env
+.env.*
+.streamlit/secrets.toml
+*.pem
+*.key
+.netrc
+
+# ---- python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# ---- virtual environments ----
+.venv/
+venv/
+env/
+
+# ---- deployment CLI artefacts ----
+.vercel/
+.vercelignore
+
+# ---- editors / OS ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# NOTE: deploy/vercel/data/*.b64 IS committed on purpose. It is the anonymised
+# derived table the deployed function reads (no identifiers, ~2 MB). Without it
+# the deployment has no data; see deploy/vercel/README.md.
+
+# ---- reports that would embed raw records ----
+reports/_scratch/
