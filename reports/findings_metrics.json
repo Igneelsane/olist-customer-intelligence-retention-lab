@@ -1,0 +1,624 @@
+{
+  "generated_from": "/home/user/olist-customer-intelligence/data/raw/olist_orders_dataset.csv",
+  "summary": {
+    "first_order_date": "2016-09-15 00:00:00",
+    "as_of_date": "2018-08-29 00:00:00",
+    "observation_days": 714.0,
+    "n_orders": 96478.0,
+    "n_customers": 93358.0,
+    "n_orders_per_customer": 1.0334,
+    "merchandise_value": 13221498.11,
+    "freight_value": 2198275.64,
+    "payment_value": 15422461.77,
+    "avg_order_value": 137.0416,
+    "median_order_value": 86.575,
+    "avg_merchandise_per_customer": 141.6215,
+    "repeat_purchase_rate": 0.03,
+    "n_repeat_customers": 2801.0,
+    "n_one_time_customers": 90557.0,
+    "gini_customer_value": 0.5203,
+    "top_1pct_share": 0.1147,
+    "top_10pct_share": 0.411,
+    "top_20pct_share": 0.5662,
+    "lapsing_days": 121.5,
+    "inactive_days": 240.3,
+    "median_days_to_second_order": 28.9802,
+    "p75_days_to_second_order": 126.2636,
+    "median_repeat_gap_days": 29.4555,
+    "share_gaps_within_30d": 0.5013,
+    "share_gaps_within_90d": 0.6885
+  },
+  "thresholds": {
+    "lapsing_days": 121.5,
+    "inactive_days": 240.3,
+    "gap_p75_days": 121.5,
+    "gap_p90_days": 240.3,
+    "lapsing_floor": 90.0,
+    "inactive_floor": 180.0
+  },
+  "retention": {
+    "month_1_retention_pooled": 0.0048,
+    "month_2_retention_pooled": 0.0034,
+    "n_cohorts": 23.0,
+    "n_cohorts_mature_12m": 11.0,
+    "median_12m_cumulative_repeat_rate": 0.0291,
+    "n_customers_in_cohorts": 93358.0
+  },
+  "pooled_retention_months_1_to_12": [
+    {
+      "month_index": 0,
+      "retention_rate": 1.0,
+      "n_active": 93358,
+      "n_eligible": 93358,
+      "n_cohorts": 23
+    },
+    {
+      "month_index": 1,
+      "retention_rate": 0.0048,
+      "n_active": 421,
+      "n_eligible": 87214,
+      "n_cohorts": 22
+    },
+    {
+      "month_index": 2,
+      "retention_rate": 0.0034,
+      "n_active": 273,
+      "n_eligible": 81265,
+      "n_cohorts": 21
+    },
+    {
+      "month_index": 3,
+      "retention_rate": 0.0025,
+      "n_active": 192,
+      "n_eligible": 75387,
+      "n_cohorts": 20
+    },
+    {
+      "month_index": 4,
+      "retention_rate": 0.0026,
+      "n_active": 176,
+      "n_eligible": 68881,
+      "n_cohorts": 19
+    },
+    {
+      "month_index": 5,
+      "retention_rate": 0.0022,
+      "n_active": 140,
+      "n_eligible": 62299,
+      "n_cohorts": 18
+    },
+    {
+      "month_index": 6,
+      "retention_rate": 0.0023,
+      "n_active": 129,
+      "n_eligible": 55525,
+      "n_cohorts": 17
+    },
+    {
+      "month_index": 7,
+      "retention_rate": 0.0021,
+      "n_active": 102,
+      "n_eligible": 49237,
+      "n_cohorts": 16
+    },
+    {
+      "month_index": 8,
+      "retention_rate": 0.002,
+      "n_active": 86,
+      "n_eligible": 42395,
+      "n_cohorts": 15
+    },
+    {
+      "month_index": 9,
+      "retention_rate": 0.0016,
+      "n_active": 60,
+      "n_eligible": 37057,
+      "n_cohorts": 14
+    },
+    {
+      "month_index": 10,
+      "retention_rate": 0.0025,
+      "n_active": 75,
+      "n_eligible": 29997,
+      "n_cohorts": 13
+    },
+    {
+      "month_index": 11,
+      "retention_rate": 0.0022,
+      "n_active": 57,
+      "n_eligible": 25669,
+      "n_cohorts": 12
+    },
+    {
+      "month_index": 12,
+      "retention_rate": 0.0017,
+      "n_active": 36,
+      "n_eligible": 21665,
+      "n_cohorts": 11
+    }
+  ],
+  "cumulative_repeat_12m": [
+    {
+      "cohort": "2016-09-01",
+      "cohort_size": 1,
+      "repeaters": 0,
+      "rate": 0.0
+    },
+    {
+      "cohort": "2016-10-01",
+      "cohort_size": 262,
+      "repeaters": 3,
+      "rate": 0.0115
+    },
+    {
+      "cohort": "2016-12-01",
+      "cohort_size": 1,
+      "repeaters": 1,
+      "rate": 1.0
+    },
+    {
+      "cohort": "2017-01-01",
+      "cohort_size": 717,
+      "repeaters": 20,
+      "rate": 0.0279
+    },
+    {
+      "cohort": "2017-02-01",
+      "cohort_size": 1628,
+      "repeaters": 38,
+      "rate": 0.0233
+    },
+    {
+      "cohort": "2017-03-01",
+      "cohort_size": 2503,
+      "repeaters": 72,
+      "rate": 0.0288
+    },
+    {
+      "cohort": "2017-04-01",
+      "cohort_size": 2256,
+      "repeaters": 69,
+      "rate": 0.0306
+    },
+    {
+      "cohort": "2017-05-01",
+      "cohort_size": 3451,
+      "repeaters": 111,
+      "rate": 0.0322
+    },
+    {
+      "cohort": "2017-06-01",
+      "cohort_size": 3037,
+      "repeaters": 101,
+      "rate": 0.0333
+    },
+    {
+      "cohort": "2017-07-01",
+      "cohort_size": 3752,
+      "repeaters": 109,
+      "rate": 0.0291
+    },
+    {
+      "cohort": "2017-08-01",
+      "cohort_size": 4057,
+      "repeaters": 129,
+      "rate": 0.0318
+    }
+  ],
+  "segment_profile": [
+    {
+      "segment": "High-Value Active Repeat",
+      "n_customers": 460,
+      "n_orders": 1037,
+      "monetary_value": 190635.83,
+      "avg_recency_days": 62.1760869565,
+      "median_recency_days": 62.0,
+      "avg_frequency": 2.2543478261,
+      "avg_merchandise_per_customer": 414.4257173913,
+      "share_repeat": 1.0,
+      "avg_review_score": 4.3406521739,
+      "share_customers": 0.0049272692,
+      "share_value": 0.0144186255,
+      "avg_order_value": 183.833972999
+    },
+    {
+      "segment": "Active Repeat",
+      "n_customers": 385,
+      "n_orders": 783,
+      "monetary_value": 42201.39,
+      "avg_recency_days": 62.4701298701,
+      "median_recency_days": 64.0,
+      "avg_frequency": 2.0337662338,
+      "avg_merchandise_per_customer": 109.614,
+      "share_repeat": 1.0,
+      "avg_review_score": 4.3891774892,
+      "share_customers": 0.0041239101,
+      "share_value": 0.0031918766,
+      "avg_order_value": 53.8970498084
+    },
+    {
+      "segment": "Lapsing Repeat",
+      "n_customers": 840,
+      "n_orders": 1782,
+      "monetary_value": 215221.24,
+      "avg_recency_days": 181.8369047619,
+      "median_recency_days": 183.0,
+      "avg_frequency": 2.1214285714,
+      "avg_merchandise_per_customer": 256.2157619048,
+      "share_repeat": 1.0,
+      "avg_review_score": 4.0481437285,
+      "share_customers": 0.0089976221,
+      "share_value": 0.0162781281,
+      "avg_order_value": 120.7751066218
+    },
+    {
+      "segment": "Recent One-Time Buyer",
+      "n_customers": 12427,
+      "n_orders": 12427,
+      "monetary_value": 1780961.77,
+      "avg_recency_days": 92.2751267402,
+      "median_recency_days": 93.0,
+      "avg_frequency": 1.0,
+      "avg_merchandise_per_customer": 143.3138947453,
+      "share_repeat": 0.0,
+      "avg_review_score": 4.2629494949,
+      "share_customers": 0.1331112492,
+      "share_value": 0.1347019646,
+      "avg_order_value": 143.3138947453
+    },
+    {
+      "segment": "Dormant One-Time Buyer",
+      "n_customers": 25529,
+      "n_orders": 25529,
+      "monetary_value": 3442345.74,
+      "avg_recency_days": 180.9437502448,
+      "median_recency_days": 181.0,
+      "avg_frequency": 1.0,
+      "avg_merchandise_per_customer": 134.8406024521,
+      "share_repeat": 0.0,
+      "avg_review_score": 3.9981852612,
+      "share_customers": 0.2734527303,
+      "share_value": 0.2603597347,
+      "avg_order_value": 134.8406024521
+    },
+    {
+      "segment": "Long Inactive",
+      "n_customers": 41746,
+      "n_orders": 42949,
+      "monetary_value": 5912852.87,
+      "avg_recency_days": 379.5754323768,
+      "median_recency_days": 364.0,
+      "avg_frequency": 1.0288171322,
+      "avg_merchandise_per_customer": 141.6387886265,
+      "share_repeat": 0.0267331002,
+      "avg_review_score": 4.1684948313,
+      "share_customers": 0.4471603933,
+      "share_value": 0.4472150448,
+      "avg_order_value": 137.6714910708
+    },
+    {
+      "segment": "New / Insufficient History",
+      "n_customers": 11971,
+      "n_orders": 11971,
+      "monetary_value": 1637279.27,
+      "avg_recency_days": 29.5201737532,
+      "median_recency_days": 28.0,
+      "avg_frequency": 1.0,
+      "avg_merchandise_per_customer": 136.7704677972,
+      "share_repeat": 0.0,
+      "avg_review_score": 4.3101393319,
+      "share_customers": 0.1282268258,
+      "share_value": 0.1238346257,
+      "avg_order_value": 136.7704677972
+    }
+  ],
+  "quality": {
+    "passed": true,
+    "n_checks": 16,
+    "failures": [],
+    "warnings": []
+  },
+  "service": {
+    "reviews": {
+      "n_reviews": 95832.0,
+      "n_orders": 96478.0,
+      "coverage": 0.9933,
+      "mean_score": 4.1559,
+      "median_score": 5.0,
+      "share_5": 0.5922,
+      "share_1_2": 0.1281,
+      "distribution": {
+        "1": 9352.0,
+        "2": 2921.0,
+        "3": 7916.0,
+        "4": 18888.0,
+        "5": 56755.0
+      }
+    },
+    "delivery": {
+      "n_delivered_with_date": 96470.0,
+      "median_delivery_days": 10.2175,
+      "p90_delivery_days": 23.0964,
+      "share_late": 0.0811,
+      "median_delay_days": -11.9481,
+      "median_late_delay_days": 5.8065
+    },
+    "repeat_within_window_by_score": [
+      {
+        "score_band": "1-2",
+        "n_orders": 10460,
+        "n_repeat": 252.0,
+        "share_late": 0.3641491396,
+        "repeat_rate": 0.0240917782,
+        "ci_low": 0.0213233243,
+        "ci_high": 0.0272096734,
+        "small_group": false
+      },
+      {
+        "score_band": "3",
+        "n_orders": 6635,
+        "n_repeat": 159.0,
+        "share_late": 0.1155990957,
+        "repeat_rate": 0.0239638282,
+        "ci_low": 0.0205500654,
+        "ci_high": 0.0279285125,
+        "small_group": false
+      },
+      {
+        "score_band": "4",
+        "n_orders": 15378,
+        "n_repeat": 335.0,
+        "share_late": 0.0506567824,
+        "repeat_rate": 0.0217843673,
+        "ci_low": 0.0195937431,
+        "ci_high": 0.0242138593,
+        "small_group": false
+      },
+      {
+        "score_band": "5",
+        "n_orders": 44701,
+        "n_repeat": 1163.0,
+        "share_late": 0.029195284,
+        "repeat_rate": 0.026017315,
+        "ci_low": 0.0245818258,
+        "ci_high": 0.0275342654,
+        "small_group": false
+      }
+    ],
+    "repeat_within_window_by_lateness": [
+      {
+        "late_bin": "Early",
+        "n_orders": 69934,
+        "n_repeat": 1753.0,
+        "share_late": 0.0,
+        "repeat_rate": 0.0250664913,
+        "ci_low": 0.0239336832,
+        "ci_high": 0.0262514743,
+        "small_group": false
+      },
+      {
+        "late_bin": "On time",
+        "n_orders": 995,
+        "n_repeat": 22.0,
+        "share_late": 0.0,
+        "repeat_rate": 0.0221105528,
+        "ci_low": 0.0146460495,
+        "ci_high": 0.0332510345,
+        "small_group": false
+      },
+      {
+        "late_bin": "1-3 days late",
+        "n_orders": 2089,
+        "n_repeat": 51.0,
+        "share_late": 1.0,
+        "repeat_rate": 0.024413595,
+        "ci_low": 0.0186171389,
+        "ci_high": 0.0319560149,
+        "small_group": false
+      },
+      {
+        "late_bin": "4-7 days late",
+        "n_orders": 1584,
+        "n_repeat": 29.0,
+        "share_late": 1.0,
+        "repeat_rate": 0.0183080808,
+        "ci_low": 0.0127770991,
+        "ci_high": 0.0261698589,
+        "small_group": false
+      },
+      {
+        "late_bin": "8+ days late",
+        "n_orders": 3133,
+        "n_repeat": 72.0,
+        "share_late": 1.0,
+        "repeat_rate": 0.0229811682,
+        "ci_low": 0.0182891045,
+        "ci_high": 0.0288416145,
+        "small_group": false
+      }
+    ],
+    "chi2_score_band": {
+      "chi2": 8.9395,
+      "p_value": 0.0301,
+      "dof": 3.0,
+      "cramers_v": 0.0108,
+      "n": 77174.0
+    },
+    "chi2_lateness": {
+      "chi2": 3.7059,
+      "p_value": 0.4473,
+      "dof": 4.0,
+      "cramers_v": 0.0069,
+      "n": 77735.0
+    },
+    "n_orders_used": 77737,
+    "n_orders_censored": 18741
+  },
+  "order_status_raw": {
+    "delivered": 96478,
+    "shipped": 1107,
+    "canceled": 625,
+    "unavailable": 609,
+    "invoiced": 314,
+    "processing": 301,
+    "created": 5,
+    "approved": 2
+  },
+  "identity": {
+    "raw_customer_ids": 99441,
+    "raw_unique_ids": 96096,
+    "extra_order_scoped_ids": 3345
+  },
+  "cleaning_log": [
+    {
+      "step": "Keep eligible order statuses ['delivered']",
+      "rows_before": 99441,
+      "rows_after": 96478,
+      "rows_removed": 2963,
+      "reason": "Only completed/delivered orders represent a realised purchase. Status distribution before filtering: {'delivered': 96478, 'shipped': 1107, 'canceled': 625, 'unavailable': 609, 'invoiced': 314, 'processing': 301, 'created': 5, 'approved': 2}"
+    },
+    {
+      "step": "Drop orders without a valid purchase timestamp",
+      "rows_before": 96478,
+      "rows_after": 96478,
+      "rows_removed": 0,
+      "reason": "Recency, cohort month and time-to-second-purchase are undefined without a purchase date."
+    },
+    {
+      "step": "De-duplicate order_id",
+      "rows_before": 96478,
+      "rows_after": 96478,
+      "rows_removed": 0,
+      "reason": "A duplicated order_id would double-count revenue and orders."
+    },
+    {
+      "step": "Drop orders without a resolvable customer_unique_id",
+      "rows_before": 96478,
+      "rows_after": 96478,
+      "rows_removed": 0,
+      "reason": "Customer-level retention analysis needs a stable person-level identifier."
+    },
+    {
+      "step": "Enrich with customer identity, calendar and delivery features",
+      "rows_before": 96478,
+      "rows_after": 96478,
+      "rows_removed": 0,
+      "reason": "Derived columns only; no rows added or removed."
+    }
+  ],
+  "audit": [
+    {
+      "table": "orders",
+      "rows": 99441,
+      "columns": 8,
+      "duplicate_key_rows": 0,
+      "missing": {
+        "order_approved_at": 160,
+        "order_delivered_carrier_date": 1783,
+        "order_delivered_customer_date": 2965
+      }
+    },
+    {
+      "table": "customers",
+      "rows": 99441,
+      "columns": 5,
+      "duplicate_key_rows": 0,
+      "missing": {}
+    },
+    {
+      "table": "order_items",
+      "rows": 112650,
+      "columns": 7,
+      "duplicate_key_rows": 0,
+      "missing": {}
+    },
+    {
+      "table": "payments",
+      "rows": 103886,
+      "columns": 5,
+      "duplicate_key_rows": 0,
+      "missing": {}
+    },
+    {
+      "table": "reviews",
+      "rows": 99224,
+      "columns": 7,
+      "duplicate_key_rows": 814,
+      "missing": {
+        "review_comment_title": 87656,
+        "review_comment_message": 58247
+      }
+    }
+  ],
+  "recommendations": [
+    {
+      "segment": "Lapsing Repeat",
+      "priority": "High",
+      "headline": "Re-engage proven repeat buyers before they go quiet",
+      "evidence": [
+        "840 customers (0.90%) with \u22652 eligible orders but mean recency 182 days \u2014 beyond the 122-day lapsing threshold but inside the 240-day inactive threshold.",
+        "Their average frequency is 2.12 orders and they still account for 1.63% of historical merchandise value.",
+        "75th percentile of all observed repeat-purchase gaps in this dataset is 122 days \u2014 the basis for the lapsing threshold."
+      ]
+    },
+    {
+      "segment": "Recent One-Time Buyer",
+      "priority": "High",
+      "headline": "Use the post-purchase window to build a second purchase",
+      "evidence": [
+        "12,427 customers (13.31%) have exactly one eligible order and mean recency 92 days (within the 122-day lapsing threshold).",
+        "This is the largest single pool of convertible demand: one-time buyers are 97.00% of the entire customer base.",
+        "Median observed time to a second purchase is 29 days, which is the natural anchor for the reminder timing."
+      ]
+    },
+    {
+      "segment": "Service experience (cross-segment)",
+      "priority": "High",
+      "headline": "Fix the delivery experience before funding discounts",
+      "evidence": [
+        "12.81% of eligible orders received a review score of 1-2, and 8.11% were delivered after the estimated delivery date (median delay among late orders: -11.9 days).",
+        "Review coverage: 99.33% of eligible orders have a review score; mean score 4.16.",
+        "See the Customer Experience page for the measured review-vs-lateness relationship and its effect size."
+      ]
+    },
+    {
+      "segment": "High-Value Active Repeat",
+      "priority": "Medium",
+      "headline": "Protect the customers who already generate disproportionate value",
+      "evidence": [
+        "460 customers (0.49% of the base) generated R$ 190,636 \u2014 1.44% of all historical merchandise value.",
+        "Value index 2.93x (share of value \u00f7 share of customers).",
+        "Average 2.25 eligible orders per customer and mean recency 62 days (lapsing threshold = 122 days).",
+        "Base-wide repeat-purchase rate is 3.00%, so this group is already an outlier \u2014 the goal is retention of existing behaviour, not creation of new behaviour."
+      ]
+    },
+    {
+      "segment": "Dormant One-Time Buyer",
+      "priority": "Medium",
+      "headline": "Win back single-purchase customers selectively, not with blanket discounts",
+      "evidence": [
+        "25,529 customers (27.35%) placed one order and their mean recency is 181 days \u2014 past the 122-day lapsing threshold but within 240 days.",
+        "They carry 26.04% of historical merchandise value with 1.00 orders per customer on average."
+      ]
+    },
+    {
+      "segment": "Long Inactive",
+      "priority": "Low",
+      "headline": "Treat long-inactive customers as a low-priority reactivation pool, not a discount target",
+      "evidence": [
+        "41,746 customers (44.72%) have not ordered for more than 240 days (mean recency 380 days).",
+        "They hold only 44.72% of historical merchandise value, and 97.33% of them never placed a second order.",
+        "Their inactivity exceeds the 90th percentile of observed repeat-purchase gaps, i.e. they sit outside the normal repeat rhythm of this customer base."
+      ]
+    },
+    {
+      "segment": "New / Insufficient History",
+      "priority": "Low",
+      "headline": "Do not judge very recent customers as inactive",
+      "evidence": [
+        "11,971 customers (12.82%) made their first eligible order less than 60 days before the analysis date \u2014 there is not enough elapsed time to observe a second purchase.",
+        "Classifying them as 'churned' or dropping them would bias every retention ratio; they are therefore reported separately."
+      ]
+    }
+  ]
+}
