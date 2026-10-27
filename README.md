@@ -107,7 +107,7 @@ olist-customer-intelligence/
 ├── reports/                    # data dictionary, methodology, findings, limitations
 │   └── findings_metrics.json   # machine-readable metrics behind every quoted number
 ├── assets/screenshots/         # real screenshots from the running app
-└── HANDOFF.md                  # what was built, tested, verified and left open
+└── deploy/vercel/              # Vercel build: Flask function + static dashboard
 ```
 
 **Design principle:** app code contains no business logic. Pages call functions in
@@ -305,10 +305,9 @@ pytest
 streamlit run app.py
 ```
 
-**This workspace ships the dataset in its canonical downloaded form**
-(`data/raw/brazilian-ecommerce.zip`). On first launch the loader extracts the CSVs
-automatically — that path is tested — so the checked-in workspace stays small and no
-raw data is ever committed to Git.
+**Drop the dataset in its canonical downloaded form** (`data/raw/brazilian-ecommerce.zip`).
+On first launch the loader extracts the CSVs automatically — that path is tested — so the
+repository stays small and no raw data is ever committed to Git.
 
 The app opens at `http://localhost:8501`. First launch builds the analytical tables
 (~10 s) and caches them as parquet in `data/processed/`; later launches are fast.
@@ -360,7 +359,7 @@ Real captures from the running application (`assets/screenshots/`):
 | Retention Action Planner | `05_retention_action_planner.png` |
 | Methodology & Data Quality | `06_methodology_data_quality.png` |
 
-These are captures of the application as it actually ran in this workspace
+These are captures of the application as it actually ran locally
 (Playwright, 1500×1000–1250 viewport), not mockups.
 
 The Vercel dashboard (`deploy/vercel/public/index.html`) was captured the same way, driven by
@@ -394,27 +393,7 @@ business finding.
 
 ---
 
-## 12. Resume entry (template — fill in from a verified run)
-
-> **Customer Intelligence & Retention Lab** — *Python, pandas, Plotly, Streamlit, pytest*
-> Built an end-to-end customer analytics product on 96k+ delivered orders from the
-> public Olist dataset: documented data-quality audit and cleaning pipeline, monthly
-> cohort retention model with explicit censoring handling, and an interpretable RFM
-> segmentation. Quantified a **3.0% repeat-purchase rate** and a **29-day median
-> time-to-second-order**, showed value concentration of **41% in the top 10% of
-> customers**, and tested whether service experience predicts repeat purchasing —
-> finding a strong delivery→review-score relationship but **no practically meaningful
-> review→retention association** (Cramér's V = 0.01). Delivered an interactive
-> six-page Streamlit app with evidence-linked recommendations, experiment designs and a
-> break-even campaign simulator; validated core metrics with **76 passing pytest tests**
-> on synthetic fixtures.
-
-Do not add numbers you have not reproduced yourself. If you re-run on a modified
-pipeline, regenerate `reports/findings_metrics.json` and quote those values.
-
----
-
-## 13. Licence
+## 12. Licence
 
 Code: MIT (see `LICENSE`). Dataset: CC BY-NC-SA 4.0 — this project must not be used
 commercially, and any redistribution of derived data must carry the same licence and

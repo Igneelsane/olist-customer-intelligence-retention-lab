@@ -130,7 +130,7 @@ rather than through any manual upload step.
 
 ### Option A — Vercel dashboard (recommended, no CLI)
 
-1. Push this repository to GitHub (see `HANDOFF.md` §10 for the exact commands).
+1. Connect this repository to Vercel (it is already on GitHub).
 2. In Vercel: **Add New → Project → Import** the repository.
 3. Set **Root Directory** to `deploy/vercel`. Framework preset: **Flask** (auto-detected).
    Leave build and output settings alone — `vercel.json` supplies them.
@@ -169,41 +169,42 @@ If `health` returns 503, the payload did not make it into the bundle: check that
 
 ---
 
-## 5. Current status (as of the last session)
+## 5. Deployment status
 
 | Step | State |
 |---|---|
-| Architecture chosen and justified | done |
-| Function + dashboard written | done |
-| Data payload exported from the real dataset | done (96,478 rows, checksum recorded) |
-| Local HTTP verification of all views | done |
-| Cross-check against the pandas pipeline | done — all metrics match |
-| Browser test of the dashboard (31 checks) | done |
-| Vercel project created and configured (framework: Flask, output dir: `public`) | done |
-| Vercel build of the real code with data | **not done** |
-| Public URL serving real numbers | **not done** |
+| Function + dashboard written and reviewed | done |
+| Data payload exported from the real dataset | done — 96,478 rows, checksum recorded in `metadata.json` |
+| Local HTTP verification of all six views | done |
+| Cross-check against the pandas pipeline | done — every shared metric matches (table in §3) |
+| Browser test of the dashboard (31 checks, 0 console errors) | done |
+| Vercel project linked to the GitHub repository and built | done — framework Flask, root directory `deploy/vercel` |
+| Public access | requires one project setting, see below |
 
-### Why the public deployment is not live yet
+### If visitors see a login page
 
-1. **The payload cannot be uploaded from the session that built it.** The deployment tool
-   available there accepts inline file contents only, with no path or binary upload; a 2.2 MB
-   base64 payload (and even a `vercel.json` file, whose JSON content the tool re-parses) cannot
-   be sent that way. The normal transport is git, which needs the GitHub repository below.
-2. **GitHub is not reachable from that session** — no credentials, no `gh`, no SSH key. The
-   repository does not exist yet, so nothing can be pushed from there.
-3. **Deployment Protection is enabled on the account**, so even a successful deployment would
-   redirect visitors to a Vercel login page until it is switched off (one setting, free).
+The project has **Vercel Authentication** enabled, which redirects every request — including
+the API — to `vercel.com/login`. To make the site public:
 
-None of these are architectural: the code, payload and configuration are complete and verified,
-and the project `olist-customer-intelligence-retention-lab` already exists on Vercel, ready to
-be connected to the repository.
+> Project → Settings → Deployment Protection → Vercel Authentication → **Disabled**
 
-### Exact remaining steps
+Verify afterwards:
 
-1. Create the GitHub repository and push (commands in `HANDOFF.md` §10).
-2. Import it in Vercel with root directory `deploy/vercel`, or run `vercel deploy --prod`.
-3. Disable Deployment Protection for the project.
-4. `curl .../api/analytics?view=health` → expect `{"status": "ok", "rows": 96478, ...}`.
+```bash
+curl -s https://<your-url>/api/analytics?view=health    # {"status": "ok", "rows": 96478, ...}
+```
+
+### Redeploying after a change
+
+The project builds from the GitHub repository, so a push to `main` is enough if Git deployments
+are enabled for the project (Settings → Git). Otherwise deploy manually:
+
+```bash
+cd deploy/vercel && vercel deploy --prod
+```
+
+To refresh the data (for example after changing the export), re-run
+`python scripts/export_public_data.py`, commit the new `data/*.b64` files and redeploy.
 
 ---
 

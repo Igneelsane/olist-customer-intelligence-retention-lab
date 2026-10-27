@@ -1,7 +1,7 @@
 """
 Central configuration for the Olist Customer Intelligence & Retention Lab.
 
-Everything that a reviewer might reasonably want to change -- where the data
+Everything that anyone reading or re-running the analysis may want to change -- where the data
 lives, which orders count as a real purchase, how segments are defined -- is
 declared here rather than buried inside analysis code.
 

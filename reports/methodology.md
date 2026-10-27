@@ -51,7 +51,7 @@ the newest cohorts. Since the retention KPIs depend on comparing cohorts across 
 the definition has to be stable across the whole window.
 
 **Sensitivity:** `config/settings.py::BROAD_ELIGIBLE_STATUSES` adds
-`shipped/invoiced/processing/approved`. Any reviewer can switch it and rerun; every
+`shipped/invoiced/processing/approved`. Anyone can switch it and rerun; every
 page recomputes from the same rule. The default stays narrow because a KPI called
 "purchase" should mean a completed purchase.
 
