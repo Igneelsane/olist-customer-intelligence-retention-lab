@@ -1,0 +1,3 @@
+# The deployed function is pure Python: no pandas, numpy or scipy.
+# Every metric is recomputed from the shipped derived table on request.
+flask==3.1.3
