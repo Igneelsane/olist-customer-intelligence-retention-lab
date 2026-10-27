@@ -113,7 +113,7 @@ Everything below was executed, not assumed:
 
 - **Browser test** (Playwright/Chromium against the real dashboard): 31 checks — every tab,
   every table, the SVG charts, the KPI values, zero console errors. Screenshots of the deployed
-  UI are in `assets/screenshots/deploy_*.png`.
+  UI are in `assets/screenshots/deploy_live_*.png` (captured from the live site).
 - **Failure path**: with the API blocked, the dashboard shows “The analytics function could not
   be reached, so no numbers are shown” and renders **0** KPI cards. No placeholder values.
 - **Missing data path**: with `data/` absent the function returns 503 `dataset_unavailable` with
