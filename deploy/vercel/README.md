@@ -159,8 +159,8 @@ vercel deploy --prod
 ### After deploying, verify
 
 ```bash
-curl -s https://<your-url>/api/analytics?view=health     # expect status ok, rows 96478
-curl -s https://<your-url>/api/analytics?view=methodology | head -c 400
+curl -s https://olist-customer-intelligence-retenti.vercel.app/api/analytics?view=health     # expect status ok, rows 96478
+curl -s https://olist-customer-intelligence-retenti.vercel.app/api/analytics?view=methodology | head -c 400
 ```
 
 If `health` returns 503, the payload did not make it into the bundle: check that
@@ -198,7 +198,7 @@ If that ever comes back (new project, transferred repository), disable it:
 Verify afterwards:
 
 ```bash
-curl -s https://<your-url>/api/analytics?view=health    # {"status": "ok", "rows": 96478, ...}
+curl -s https://olist-customer-intelligence-retenti.vercel.app/api/analytics?view=health    # {"status": "ok", "rows": 96478, ...}
 ```
 
 ### Redeploying after a change

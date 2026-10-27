@@ -285,7 +285,7 @@ a campaign only pays if the required uplift is plausible.
 Requires Python 3.10+ (developed on 3.13). No paid services, no API keys.
 
 ```bash
-git clone <your-repo-url> olist-customer-intelligence
+git clone https://github.com/Igneelsane/olist-customer-intelligence-retention-lab.git olist-customer-intelligence
 cd olist-customer-intelligence
 
 python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
