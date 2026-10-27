@@ -19,51 +19,43 @@ def render(ctx: AppContext) -> None:
     bands = ctx.tables["score_bands"]
     orders_outcome = ctx.tables["orders_with_outcome"]
 
-    ui.section_header(
-        "Customer experience",
-        "What the service record shows — review scores and delivery timing — and whether later "
-        "repeat purchasing is associated with it.",
-        eyebrow="Page 4 of 6",
-    )
-
-    ui.kpi_row([
-        ui.kpi_card("Review coverage", ui.fmt_pct(reviews["coverage"], 1),
-                    f"{ui.fmt_int(reviews['n_reviews'])} scored orders",
-                    "Scored eligible orders ÷ all eligible orders.", "primary"),
-        ui.kpi_card("Mean review score", f"{reviews['mean_score']:.2f} / 5",
-                    f"median {reviews['median_score']:.0f}",
-                    "Arithmetic mean over scored orders.", "teal"),
-        ui.kpi_card("Low scores (1–2)", ui.fmt_pct(reviews["share_1_2"]),
-                    f"{ui.fmt_pct(reviews['share_5'])} gave 5",
-                    "Share of scored orders with a score of 1 or 2.", "rose"),
-        ui.kpi_card("Late deliveries", ui.fmt_pct(delivery["share_late"]),
-                    f"median {delivery.get('median_late_delay_days', float('nan')):.1f} days late "
-                    f"when late",
-                    "Delivered after the estimated delivery date ÷ orders with both dates.",
-                    "amber"),
-    ], per_row=4)
+    ui.kpi_strip([
+        ui.metric("Review coverage", ui.fmt_pct(reviews["coverage"], 1),
+                  f"{ui.fmt_int(reviews['n_reviews'])} of "
+                  f"{ui.fmt_int(ctx.metrics.summary['n_orders'])} orders scored"),
+        ui.metric("Mean review score", f"{reviews['mean_score']:.2f} / 5",
+                  f"median {reviews['median_score']:.0f}"),
+        ui.metric("Low scores (1–2)", ui.fmt_pct(reviews["share_1_2"]),
+                  f"{ui.fmt_pct(reviews['share_5'])} gave 5",
+                  "the commercially important tail behind a high average", risk=True),
+        ui.metric("Late deliveries", ui.fmt_pct(delivery["share_late"]),
+                  f"median {delivery.get('median_late_delay_days', float('nan')):.1f} days late "
+                  f"when late",
+                  "delivered after the estimated date"),
+    ])
 
     # ---------------- Reviews ----------------
-    ui.section_header("Review scores", "Distribution of scores across eligible orders.",
-                      eyebrow="Reviews")
+    ui.section_header("Review scores",
+                      "Distribution across eligible orders. Scores are strongly skewed to 5, so "
+                      "the mean hides the small but commercially important tail of 1–2s.")
     col1, col2 = st.columns([1.3, 1], gap="medium")
     with col1:
-        st.plotly_chart(viz.score_distribution(reviews["distribution"]),
-                        width="stretch", config={"displayModeBar": False})
+        ui.chart(viz.score_distribution(reviews["distribution"]), height=290, title="")
     with col2:
         dist = pd.DataFrame(
-            [(f"{k}", v, v / reviews["n_reviews"]) for k, v in sorted(reviews["distribution"].items())],
+            [(f"{k}", v, 100 * v / reviews["n_reviews"])
+             for k, v in sorted(reviews["distribution"].items())],
             columns=["Score", "Orders", "Share"])
         ui.styled_table(dist, column_config={
-            "Share": st.column_config.ProgressColumn(format="%.1f%%", min_value=0, max_value=1)})
+            "Share": st.column_config.ProgressColumn(format="%.1f%%", min_value=0, max_value=100)})
         ui.note("Scores are strongly skewed to 5. Means alone hide the small but commercially "
                 "important tail of 1–2 scores.")
 
     # ---------------- Delivery ----------------
     ui.section_header(
         "Delivery timing",
-        "Delivery duration and lateness against the estimated delivery date recorded in the order.",
-        eyebrow="Logistics",
+        "Duration from purchase to delivery, and how often the order arrived after the estimated "
+        "delivery date recorded at checkout.",
     )
     col1, col2 = st.columns([1.3, 1], gap="medium")
     with col1:
@@ -75,29 +67,29 @@ def render(ctx: AppContext) -> None:
     with col2:
         late_dist = (orders_outcome["late_bin"].value_counts()
                      .rename_axis("Delivery vs estimate").reset_index(name="Orders"))
-        late_dist["Share"] = late_dist["Orders"] / late_dist["Orders"].sum()
+        late_dist["Share"] = 100 * late_dist["Orders"] / late_dist["Orders"].sum()
         late_dist = late_dist.sort_values("Orders", ascending=False)
         ui.styled_table(late_dist, column_config={
-            "Share": st.column_config.ProgressColumn(format="%.1f%%", min_value=0, max_value=1)})
+            "Share": st.column_config.ProgressColumn(format="%.1f%%", min_value=0,
+                                                     max_value=100)})
         ui.note(f"Median delivery: {delivery['median_delivery_days']:.0f} days; 90th percentile "
                 f"{delivery['p90_delivery_days']:.0f} days.")
 
-    st.plotly_chart(viz.score_by_lateness(sa.score_vs_lateness(orders_outcome)),
-                    width="stretch", config={"displayModeBar": False})
+    ui.chart(viz.score_by_lateness(sa.score_vs_lateness(orders_outcome)), height=280,
+             title="Mean review score by delivery lateness")
     ui.callout(
         "Review score falls sharply as deliveries arrive later than the promised date. This is a "
         "measured association within one observational dataset — the direction is plausible "
         "(late delivery → dissatisfaction) but the data cannot rule out that harder-to-serve "
         "regions or product types drive both.",
-        "insight", "Reading the relationship",
+        "plain", "Reading the relationship",
     )
 
     # ---------------- Repeat within window ----------------
     ui.section_header(
         f"Did they order again within {settings.SERVICE_REPEAT_WINDOW_DAYS} days?",
-        "The outcome is measured on the same customer after the order in question, using only "
-        "orders whose full follow-up window is inside the dataset (right-censored orders excluded).",
-        eyebrow="Association",
+        "Measured on the same customer after the order in question, and only for orders whose full "
+        "follow-up window sits inside the dataset.",
     )
 
     n_used = int(orders_outcome["repeat_within_window"].notna().sum())
@@ -110,7 +102,7 @@ def render(ctx: AppContext) -> None:
         f"{ui.fmt_pct(orders_outcome['repeat_within_window'].mean(), 2)} — tiny, because repeat "
         f"purchasing is rare in this dataset. Treat the <i>differences between groups</i> as the "
         f"signal, not the absolute level.",
-        "definition", "Denominator check",
+        "plain", "Denominator check",
     )
 
     col1, col2 = st.columns(2, gap="medium")
@@ -160,19 +152,20 @@ def render(ctx: AppContext) -> None:
             ". Service experience clearly drives <b>satisfaction</b> — but in this dataset it does "
             "not measurably predict whether a customer orders again. That is a genuine result, and "
             "it argues against building a win-back programme on review scores alone.",
-            "insight", "What the data actually says")
+            "note-block", "What the data actually says")
     else:
         ui.callout(
             f"Effect sizes here are Cramér's V = {v_score:.3f} for review band and "
             f"{v_late:.3f} for lateness ({sa.interpret_effect_size(v_score)} and "
             f"{sa.interpret_effect_size(v_late)}). Interpret the magnitude before the significance: "
             "with tens of thousands of orders, small differences reach statistical significance "
-            "easily.", "insight", "What the data actually says")
+            "easily.", "note-block", "What the data actually says")
 
     detail = sa.repeat_rate_by_group(bands, "score_band").rename(columns={
         "score_band": "Review band", "n_orders": "Orders with full window",
         "n_repeat": "Repeated within window", "repeat_rate": "Repeat rate",
         "ci_low": "95% CI lower", "ci_high": "95% CI upper", "small_group": "Group too small"})
+    detail = ui.pct(detail, ["Repeat rate", "95% CI lower", "95% CI upper"])
     ui.styled_table(detail, column_config={
         "Repeat rate": st.column_config.NumberColumn(format="%.3f%%"),
         "95% CI lower": st.column_config.NumberColumn(format="%.3f%%"),
@@ -181,9 +174,9 @@ def render(ctx: AppContext) -> None:
     ui.download_csv(detail, "repeat_by_review_band.csv", "Download table (CSV)")
 
     # ---------------- Causality ----------------
-    ui.section_header("Correlation is not causation — four specific reasons here", "",
-                      eyebrow="Interpretation")
-    ui.callout(
+    with st.expander("Why this is an association, not a cause — four specific reasons",
+                     expanded=False):
+        ui.callout(
         "<b>1. Confounding by customer type.</b> Customers who buy small, immediate-need items may "
         "both review quickly and never return, independent of service quality.<br>"
         "<b>2. Reverse timing.</b> A review is submitted after delivery; if delivery is bad, the "
@@ -194,14 +187,13 @@ def render(ctx: AppContext) -> None:
         "<b>4. No experiment.</b> Nothing in this dataset varies service quality at random, so no "
         "causal effect of delivery speed on retention can be estimated. An operational A/B test or "
         "a staggered rollout would be required.",
-        "warning", "What this page cannot tell you",
+        "caution", "What this page cannot tell you",
     )
 
     # ---------------- Category view ----------------
     ui.section_header(
         "Product categories",
-        "Where orders, value and service outcomes sit by dominant category per order.",
-        eyebrow="Categories",
+        "Orders, value and service outcomes by the dominant category of each order.",
     )
     cat = sa.category_performance(ctx.tables["order_values"])
     if cat.empty:

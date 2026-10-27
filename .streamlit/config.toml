@@ -1,0 +1,15 @@
+# Native Streamlit theme, kept in sync with config/settings.PALETTE so that the
+# widgets Streamlit draws itself (sliders, tables, popovers) match the layout.
+[theme]
+base = "light"
+primaryColor = "#1F4D3F"
+backgroundColor = "#FAF9F6"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#1A1A17"
+font = "sans serif"
+
+[client]
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false

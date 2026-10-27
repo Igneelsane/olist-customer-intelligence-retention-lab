@@ -17,15 +17,8 @@ def render(ctx: AppContext) -> None:
     summary = ctx.metrics.summary
     thresholds = ctx.metrics.thresholds
 
-    ui.section_header(
-        "Methodology and data quality",
-        "Every rule that produced the numbers elsewhere in this application, plus what the data "
-        "cannot support.",
-        eyebrow="Page 6 of 6",
-    )
-
-    tabs = st.tabs(["Source & scope", "Cleaning log", "Metric definitions",
-                    "Data quality checks", "Raw data audit", "Limitations"])
+    tabs = st.tabs(["Source", "Cleaning", "Definitions", "Quality checks", "Raw audit",
+                    "Limitations"])
 
     # ---------------- Source ----------------
     with tabs[0]:
@@ -52,7 +45,7 @@ def render(ctx: AppContext) -> None:
                 "employee or consultant of Olist and have no access to its internal systems, "
                 "campaign data or customer records. Nothing here describes Olist's actual "
                 "operations, marketing campaigns or customer intelligence.",
-                "danger", "Independence statement",
+                "plain", "Independence statement",
             )
         with col2:
             st.markdown("**Data files loaded**")
@@ -76,7 +69,7 @@ def render(ctx: AppContext) -> None:
             "calculation in this application therefore uses <b><code>customer_unique_id</code></b>. "
             "Using <code>customer_id</code> would have made the repeat-purchase rate exactly zero by "
             "construction — a silent, total error.",
-            "insight", "Why customer_unique_id",
+            "note-block", "Why customer_unique_id",
         )
         n_ids = ctx.raw_meta["n_customer_ids"]
         n_unique = ctx.raw_meta["n_unique_ids"]
@@ -99,7 +92,7 @@ def render(ctx: AppContext) -> None:
             "artificially inactive and bias cohort maturity. The alternative "
             f"({list(settings.BROAD_ELIGIBLE_STATUSES)}) is available via "
             "<code>config/settings.py</code> for a sensitivity check.",
-            "warning", "Status choice",
+            "caution", "Status choice",
         )
 
         log = ctx.tables.get("cleaning_log")
@@ -125,7 +118,7 @@ def render(ctx: AppContext) -> None:
             "<code>validate='one_to_one'</code>, and then verifies order count is unchanged and that "
             "item-level totals reconcile with an independent aggregation. Both checks run on every "
             "application start and are shown in the next tab.",
-            "success", "Double-counting prevention",
+            "plain", "Double-counting prevention",
         )
 
         st.markdown("### Monetary definitions kept separate")

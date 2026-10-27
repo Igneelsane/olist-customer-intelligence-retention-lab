@@ -350,34 +350,31 @@ console errors). Endpoint list, payload description, platform limits and redeplo
 
 ## 10. Screenshots
 
-Real captures from the running application (`assets/screenshots/`):
+Real captures from the running application (`assets/screenshots/`), taken with Playwright
+against the app as it actually rendered — not mockups:
 
 | Page | File |
 |---|---|
-| Executive Overview | `01_executive_overview.png` |
-| Retention Intelligence | `02_retention_intelligence.png` |
-| Cohort retention heatmap | `02b_cohort_heatmap.png` |
-| Retention curves | `02c_retention_curves.png` |
-| Customer Segmentation | `03_customer_segmentation.png` |
-| Segment profile table | `03b_segment_profile.png` |
-| Customer Experience | `04_customer_experience.png` |
-| Retention Action Planner | `05_retention_action_planner.png` |
-| Methodology & Data Quality | `06_methodology_data_quality.png` |
+| Overview | `01_overview.png` |
+| Retention | `02_retention.png` |
+| Customers | `03_customers.png` |
+| Customer experience | `04_experience.png` |
+| Action planner | `05_planner.png` |
+| Methodology | `06_methodology.png` |
+| Mobile layout (390 px) | `mobile_overview.png`, `mobile_customers.png` |
+| Filter and assumption panels | `02b_retention_filters.png`, `05b_planner_assumptions.png` |
 
-These are captures of the application as it actually ran locally
-(Playwright, 1500×1000–1250 viewport), not mockups.
-
-The Vercel dashboard (`deploy/vercel/public/index.html`) was captured the same way, driven by
-the real analytics function on a local server:
+The Vercel dashboard (`deploy/vercel/public/index.html`) uses the same visual language and was
+captured the same way, driven by the real analytics function:
 
 | View | File |
 |---|---|
-| Overview — live site | `deploy_live_overview.png` |
-| Retention cohorts — live site | `deploy_live_retention.png` |
-| Methodology & integrity checks — live site | `deploy_live_methodology.png` |
-| Failure state when the API is unreachable — live site | `deploy_live_api_down.png` |
-
----
+| Overview | `deploy_live_overview.png` |
+| Retention cohorts | `deploy_live_retention.png` |
+| Segments | `deploy_live_segments.png` |
+| Methodology & integrity checks | `deploy_live_methodology.png` |
+| Mobile layout (390 px) | `mobile_dashboard.png` |
+| Failure state when the API is unreachable | `deploy_live_api_down.png` |
 
 ## 11. Tests
 

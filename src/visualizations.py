@@ -22,25 +22,44 @@ P = settings.PALETTE
 BASE_LAYOUT = dict(
     template="plotly_white",
     font=dict(family="Inter, -apple-system, Segoe UI, Roboto, sans-serif",
-              size=13, color=P["slate"]),
-    title_font=dict(size=15, color=P["ink"]),
-    margin=dict(l=10, r=10, t=48, b=10),
-    hoverlabel=dict(bgcolor="white", font_size=12, font_family="Inter, sans-serif"),
-    colorway=[P["primary"], P["teal"], P["violet"], P["amber"], P["rose"], P["green"], P["muted"]],
-    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1,
-                font=dict(size=11)),
+              size=12, color=P["slate"]),
+    title_font=dict(size=13.5, color=P["ink"]),
+    title=dict(x=0, xanchor="left", y=0.97, yanchor="top"),
+    margin=dict(l=6, r=6, t=54, b=8),
+    hoverlabel=dict(bgcolor="white", bordercolor=P["line"], font_size=12,
+                    font_family="Inter, sans-serif", font_color=P["ink"]),
+    colorway=[P["primary"], P["teal"], P["violet"], P["amber"], P["rose"],
+              P["green"], P["muted"]],
+    legend=dict(orientation="h", yanchor="bottom", y=1.0, xanchor="left", x=0,
+                font=dict(size=11, color=P["slate"]), bgcolor="rgba(0,0,0,0)"),
+    plot_bgcolor="white",
+    paper_bgcolor="rgba(0,0,0,0)",
+    separators=".,",
 )
 
 
-def style(fig: go.Figure, title: str = "", height: int = 360, y_title: str = "",
-          x_title: str = "", show_legend: bool = True) -> go.Figure:
+def style(fig: go.Figure, title: str = "", height: int = 320, y_title: str = "",
+          x_title: str = "", show_legend: Optional[bool] = None) -> go.Figure:
+    """
+    Apply the shared chart language: hairline grid, no frame, one accent.
+
+    ``show_legend=None`` hides the legend automatically when there is only one
+    series — a one-item legend is pure decoration.
+    """
     fig.update_layout(**BASE_LAYOUT)
+    if show_legend is None:
+        show_legend = len(fig.data) > 1
     fig.update_layout(height=height, title=title,
                       xaxis_title=x_title, yaxis_title=y_title,
                       showlegend=show_legend)
-    fig.update_xaxes(showgrid=False, zeroline=False, linecolor=P["line"])
-    fig.update_yaxes(gridcolor=P["line"], zeroline=False)
-    fig.update_layout(plot_bgcolor="white", paper_bgcolor="white")
+    fig.update_xaxes(showgrid=False, zeroline=False, showline=True,
+                     linecolor=P["line"], linewidth=1, ticks="",
+                     tickfont=dict(size=11, color=P["muted"]),
+                     title_font=dict(size=11, color=P["muted"]))
+    fig.update_yaxes(gridcolor=P["line_soft"], griddash="dot", zeroline=False,
+                     showline=False, ticks="",
+                     tickfont=dict(size=11, color=P["muted"]),
+                     title_font=dict(size=11, color=P["muted"]))
     return fig
 
 
@@ -55,7 +74,7 @@ def trend_area(monthly: pd.DataFrame, y: str, title: str, y_title: str,
         x=monthly["month"], y=monthly[y], mode="lines+markers" if marker else "lines",
         line=dict(width=2.4, color=P["primary"]),
         marker=dict(size=5),
-        fill="tozeroy", fillcolor="rgba(29,78,216,0.08)",
+        fill="tozeroy", fillcolor="rgba(31,77,63,0.07)",
         hovertemplate="%{x|%b %Y}<br>%{y:,.0f}<extra></extra>",
         name=y_title,
     ))
@@ -68,7 +87,7 @@ def dual_axis_trend(monthly: pd.DataFrame, bar_col: str, line_col: str,
 
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     fig.add_trace(go.Bar(x=monthly["month"], y=monthly[bar_col], name=bar_name,
-                         marker_color="rgba(29,78,216,0.55)",
+                         marker_color=P["primary"],
                          hovertemplate="%{x|%b %Y}<br>%{y:,.0f}<extra></extra>"),
                   secondary_y=False)
     fig.add_trace(go.Scatter(x=monthly["month"], y=monthly[line_col], name=line_name,
@@ -77,7 +96,7 @@ def dual_axis_trend(monthly: pd.DataFrame, bar_col: str, line_col: str,
                              hovertemplate="%{x|%b %Y}<br>%{y:,.1f}<extra></extra>"),
                   secondary_y=True)
     fig = style(fig, title)
-    fig.update_yaxes(title_text=bar_name, secondary_y=False, gridcolor=P["line"])
+    fig.update_yaxes(title_text=bar_name, secondary_y=False)
     fig.update_yaxes(title_text=line_name, secondary_y=True, showgrid=False)
     return fig
 
@@ -85,7 +104,7 @@ def dual_axis_trend(monthly: pd.DataFrame, bar_col: str, line_col: str,
 def new_vs_returning(monthly_split: pd.DataFrame) -> go.Figure:
     fig = go.Figure()
     fig.add_trace(go.Bar(x=monthly_split["month"], y=monthly_split["new_customers"],
-                         name="First-time buyers", marker_color="rgba(29,78,216,0.65)",
+                         name="First-time buyers", marker_color=P["muted"],
                          hovertemplate="%{x|%b %Y}<br>%{y:,.0f}<extra></extra>"))
     fig.add_trace(go.Bar(x=monthly_split["month"], y=monthly_split["returning_customers"],
                          name="Returning buyers", marker_color=P["teal"],
@@ -149,7 +168,7 @@ def concentration_curve(customers: pd.DataFrame) -> go.Figure:
         fig.add_annotation(x=pct, y=cum[k - 1], text=f"top {int(pct*100)}% → {cum[k-1]:.1%}",
                            showarrow=True, arrowhead=0, ax=40, ay=-30,
                            font=dict(size=11, color=P["ink"]),
-                           bgcolor="white", bordercolor=P["line"])
+                           bgcolor="white", bordercolor=P["line"], borderwidth=1)
     fig = style(fig, "Customer value concentration (cumulative share of merchandise value)",
                 x_title="Share of customers, ranked by value", y_title="Cumulative share of value")
     fig.update_yaxes(tickformat=".0%")
@@ -199,22 +218,25 @@ def cohort_heatmap(matrix: pd.DataFrame, max_index: int = 12, value_fmt: str = "
 
     text = np.vectorize(_fmt)(arr)
 
-    colorscale = [[0, "#F8FAFC"], [0.06, "#DBEAFE"], [0.30, "#93C5FD"],
-                  [0.65, "#2563EB"], [1, "#0B2545"]]
+    colorscale = [[0, "#FBFAF7"], [0.05, "#E9EFEC"], [0.28, "#C3D6CE"],
+                  [0.62, "#6F9587"], [1, "#1F4D3F"]]
 
     fig = go.Figure(go.Heatmap(
         z=plot_z, x=labels, y=y, text=text, texttemplate="%{text}",
-        textfont=dict(size=10),
+        textfont=dict(size=10, color=P["slate"]),
         colorscale=colorscale,
         zmin=0, zmax=zmax,
         hovertemplate="Cohort %{y}<br>%{x} after first purchase<br>"
                       "Retention %{text}<extra></extra>",
-        colorbar=dict(title="Retention<br>(M1+)", thickness=12, len=0.72,
-                      tickformat=".2%", tickvals=[0, zmax/2, zmax]),
-        xgap=1.5, ygap=1.5,
+        colorbar=dict(title=dict(text="Retention<br>(M1+)", side="top"),
+                      thickness=8, len=0.55, outlinewidth=0,
+                      tickformat=".2%", tickvals=[0, zmax/2, zmax],
+                      tickfont=dict(size=10, color=P["muted"]),
+                      ticks=""),
+        xgap=2, ygap=2,
     ))
     fig = style(fig, "Cohort retention heatmap — share of the cohort ordering in each specific month",
-                height=max(320, 26 * len(matrix) + 120), show_legend=False)
+                height=max(300, 24 * len(matrix) + 110), show_legend=False)
     fig.update_yaxes(autorange="reversed", title="First-purchase cohort")
     fig.update_xaxes(title="Months since first purchase")
     return fig
@@ -228,10 +250,11 @@ def retention_curves(curves: pd.DataFrame, highlight: Optional[Sequence[pd.Times
         is_hi = highlight is not None and pd.Timestamp(c) in set(pd.Timestamp(h) for h in highlight)
         fig.add_trace(go.Scatter(
             x=sub["month_index"], y=sub["retention_rate"], mode="lines+markers",
-            name=pd.Timestamp(c).strftime("%Y-%m"),
-            opacity=1.0 if is_hi else 0.35,
-            line=dict(width=2.6 if is_hi else 1.2),
-            marker=dict(size=5 if is_hi else 3),
+            name=pd.Timestamp(c).strftime("%b %Y"),
+            line=dict(width=2.2 if is_hi else 1.1,
+                      color=P["primary"] if is_hi else "#CFCCC4"),
+            marker=dict(size=4.5 if is_hi else 0),
+            opacity=1.0 if is_hi else 1.0,
             hovertemplate=f"{pd.Timestamp(c).strftime('%Y-%m')}<br>Month %{{x}}<br>"
                           "%{y:.3%}<extra></extra>",
         ))
@@ -245,10 +268,10 @@ def pooled_retention(curves: pd.DataFrame, weights: pd.DataFrame) -> go.Figure:
     fig = go.Figure()
     fig.add_trace(go.Bar(
         x=weights["month_index"], y=weights["retention_rate"],
-        marker_color="rgba(29,78,216,0.5)", name="Pooled cohort retention",
+        marker_color=P["primary"], name="Pooled cohort retention",
         hovertemplate="Month %{x}<br>%{y:.3%}<extra></extra>",
     ))
-    fig = style(fig, "Pooled retention by month since first purchase (size-weighted, observable cells only)",
+    fig = style(fig, "Pooled retention by month since first purchase",
                 x_title="Months since first purchase", y_title="Retention", show_legend=False)
     fig.update_yaxes(tickformat=".2%")
     return fig
@@ -279,7 +302,7 @@ def segment_value_chart(profile: pd.DataFrame) -> go.Figure:
     colors = [settings.SEGMENT_COLORS.get(s, P["muted"]) for s in profile["segment"]]
     fig = go.Figure()
     fig.add_trace(go.Bar(x=profile["share_customers"], y=profile["segment"], orientation="h",
-                         name="Share of customers", marker_color="rgba(148,163,184,0.55)",
+                         name="Share of customers", marker_color=P["muted"],
                          hovertemplate="%{y}<br>%{x:.2%} of customers<extra></extra>"))
     fig.add_trace(go.Bar(x=profile["share_value"], y=profile["segment"], orientation="h",
                          name="Share of merchandise value", marker_color=colors,
@@ -292,19 +315,38 @@ def segment_value_chart(profile: pd.DataFrame) -> go.Figure:
     return fig
 
 
-def segment_scatter(df: pd.DataFrame, sample: int = 6000) -> go.Figure:
-    """Recency vs frequency, sized by value, coloured by segment."""
+def segment_scatter(df: pd.DataFrame, sample: int = 6000,
+                    lapsing_days: Optional[float] = None,
+                    inactive_days: Optional[float] = None) -> go.Figure:
+    """
+    Recency vs historical value, one dot per customer, coloured by segment.
+
+    The two vertical rules are the segment thresholds actually in force, so the
+    chart shows the rule that produced the colours rather than hiding it.
+    """
     d = df.sample(min(sample, len(df)), random_state=42)
     fig = px.scatter(
         d, x="recency_days", y="monetary_value", color="segment",
         color_discrete_map=settings.SEGMENT_COLORS,
-        hover_data={"n_orders": True, "recency_days": ":.0f", "monetary_value": ":.2f"},
-        opacity=0.55,
+        hover_data={"n_orders": True, "recency_days": ":,.0f", "monetary_value": ":,.2f"},
+        opacity=0.45,
     )
-    fig.update_traces(marker=dict(size=5, line=dict(width=0)))
-    fig.update_yaxes(type="log", title="Historical merchandise value (R$, log scale)")
-    fig.update_xaxes(title="Recency (days since last eligible order)")
-    return style(fig, "Customers by recency and historical value", height=430)
+    fig.update_traces(marker=dict(size=4, line=dict(width=0)))
+    fig.update_yaxes(type="log", title="Historical merchandise value (R$, log scale)",
+                     dtick=1, minor=dict(ticks="", showgrid=False), tickformat=",.0f")
+    fig.update_xaxes(title="Recency — days since last eligible order")
+    for value, label in ((lapsing_days, "lapsing"), (inactive_days, "inactive")):
+        if value:
+            fig.add_vline(x=float(value), line=dict(color=P["muted"], width=1, dash="dot"),
+                          annotation_text=f"{label} {value:.0f} d",
+                          annotation_position="top", annotation_font_size=10,
+                          annotation_font_color=P["muted"])
+    fig = style(fig, "", height=340)
+    # legend below the axis title so it cannot collide with the threshold labels
+    fig.update_layout(legend=dict(title=None, orientation="h", y=-0.34, x=0,
+                                  font=dict(size=10)),
+                      margin=dict(t=34, b=96))
+    return fig
 
 
 def segment_metric_bars(profile: pd.DataFrame, metric: str, title: str, y_title: str) -> go.Figure:

@@ -14,7 +14,6 @@ Run with:
 from __future__ import annotations
 
 import os
-from pathlib import Path
 
 import streamlit as st
 
@@ -40,61 +39,43 @@ st.set_page_config(
 
 ui.inject_css()
 
+# Section label -> (render function, title shown in the page header, one line of context)
 PAGES = {
-    "Executive Overview": page_overview.render,
-    "Retention Intelligence": page_retention.render,
-    "Customer Segmentation": page_segmentation.render,
-    "Customer Experience": page_experience.render,
-    "Retention Action Planner": page_planner.render,
-    "Methodology & Data Quality": page_methodology.render,
-}
-
-PAGE_CAPTIONS = {
-    "Executive Overview": "Headline KPIs",
-    "Retention Intelligence": "Cohorts & curves",
-    "Customer Segmentation": "RFM segments",
-    "Customer Experience": "Reviews & delivery",
-    "Retention Action Planner": "Evidence → action",
-    "Methodology & Data Quality": "Definitions & audit",
+    "Overview": (page_overview.render, "Overview",
+                 "How many customers bought, how much value they generated, and how often they "
+                 "came back."),
+    "Retention": (page_retention.render, "Retention",
+                  "Whether customers return after their first purchase, and how fast that signal "
+                  "fades."),
+    "Customers": (page_segmentation.render, "Customers",
+                  "Who the customers are, how historical value splits across segments, and which "
+                  "groups are worth acting on."),
+    "Customer experience": (page_experience.render, "Customer experience",
+                            "What reviews and delivery show about repeat purchasing — and why that "
+                            "is not a causal claim."),
+    "Action planner": (page_planner.render, "Action planner",
+                       "Evidence, proposed action and a scenario model for one segment at a time."),
+    "Methodology": (page_methodology.render, "Methodology",
+                    "Definitions, cleaning rules, identity handling and the quality checks behind "
+                    "every number."),
 }
 
 
 def sidebar(data_dir: str) -> str:
     with st.sidebar:
         st.markdown(
-            f"""
-            <div style="padding:2px 0 14px 0;">
-              <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.11em;
-                          text-transform:uppercase;color:{settings.PALETTE['primary']};">
-                Analytics product
-              </div>
-              <div style="font-size:1.02rem;font-weight:700;color:{settings.PALETTE['ink']};
-                          line-height:1.25;margin-top:4px;">
-                Customer Intelligence<br>&amp; Retention Lab
-              </div>
-            </div>
-            """,
+            f'<div class="brand"><div class="kicker">Retention analytics</div>'
+            f'<div class="mark">{settings.APP_TITLE}</div></div>',
             unsafe_allow_html=True,
         )
 
-        page = st.radio(
-            "Navigation",
-            list(PAGES.keys()),
-            format_func=lambda p: p,
-            label_visibility="collapsed",
-        )
+        st.markdown('<div class="nav-label">Sections</div>', unsafe_allow_html=True)
+        page = st.radio("Sections", list(PAGES.keys()), label_visibility="collapsed")
 
-        st.markdown('<hr class="divider">', unsafe_allow_html=True)
-        st.markdown(
-            '<div class="muted-note"><b>About</b><br>Independent retrospective case study on the '
-            'public Olist dataset (CC BY-NC-SA 4.0). Not affiliated with Olist; no private data '
-            'is used.</div>',
-            unsafe_allow_html=True,
-        )
-
-        with st.expander("Data source settings", expanded=False):
+        st.markdown('<div style="height:18px"></div>', unsafe_allow_html=True)
+        with st.expander("Data source", expanded=False):
             st.markdown(
-                f'<div class="muted-note">Currently reading from:<br><code>{data_dir}</code></div>',
+                f'<div class="note">Reading from<br><code>{data_dir}</code></div>',
                 unsafe_allow_html=True,
             )
             override = st.text_input(
@@ -107,24 +88,30 @@ def sidebar(data_dir: str) -> str:
                 st.session_state["data_dir_override"] = override.strip()
                 st.rerun()
 
-        with st.expander("Glossary", expanded=False):
+        with st.expander("Definitions", expanded=False):
             st.markdown(
                 """
 **Eligible order** — status `delivered` with a valid purchase timestamp.
 
 **Customer** — distinct `customer_unique_id`, not `customer_id`.
 
-**Repeat customer** — ≥2 eligible orders ever.
+**Repeat customer** — at least two eligible orders.
 
-**Month-n retention** — share of a first-purchase cohort that ordered in that
-specific month n.
+**Month-n retention** — share of a first-purchase cohort ordering in that
+specific month *n*, not cumulatively.
 
-**Monetary value** — historical merchandise value (item prices). Revenue-like,
-not profit.
+**Value** — historical merchandise value (item prices). Revenue-like, not
+profit.
 
 **Recency** — days since the customer's last eligible order.
                 """
             )
+
+        st.markdown(
+            '<div class="note" style="margin-top:18px">Independent case study on the public '
+            'Olist dataset (CC BY-NC-SA 4.0). Not affiliated with Olist; no private data.</div>',
+            unsafe_allow_html=True,
+        )
 
     return page
 
@@ -134,33 +121,25 @@ def main() -> None:
     data_dir = override or str(settings.RAW_DATA_DIR)
 
     page = sidebar(data_dir)
+    _, title, subtitle = PAGES[page]
 
     # ------------------------------------------------------------------
     # Missing-data state -- the app must degrade gracefully, never invent data
     # ------------------------------------------------------------------
     if not data_available(data_dir):
-        st.markdown(
-            f"""
-            <div class="app-masthead">
-              <div>
-                <h1>{settings.APP_TITLE}</h1>
-                <p>{settings.APP_TAGLINE}</p>
-              </div>
-              <div class="meta"><div><b>Status</b><br>Dataset not found</div></div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        ui.page_header(title, subtitle, {"Status": "Dataset not found"})
         info = data_loader.describe_dataset(data_dir)
         ui.callout(
-            "The application will not generate or substitute synthetic customer records. "
-            "It only analyses the real, public Olist dataset.",
-            "danger", "No real data loaded",
+            "The application does not generate or substitute synthetic customer records. "
+            "It only analyses the real, public Olist dataset, so the analysis stays switched "
+            "off until the files are present.",
+            "risk", "No real data loaded",
         )
         st.markdown(data_loader.missing_data_message(info))
-        st.markdown("---")
+        ui.section_header("Where the analysis lives in the meantime",
+                          "The pipeline is readable and testable without the dataset; only the "
+                          "numbers on the pages need it.")
         st.markdown(
-            "**Meanwhile, you can still explore the code:**\n\n"
             "- `src/cleaning.py` — order eligibility, child-table aggregation, reconciliation\n"
             "- `src/cohort_analysis.py` — cohort construction and retention maths\n"
             "- `src/segmentation.py` — rule-based RFM and the k-means extension\n"
@@ -176,34 +155,43 @@ def main() -> None:
         try:
             ctx = get_context(data_dir)
         except data_loader.DatasetNotFoundError as exc:
+            ui.page_header(title, subtitle, {"Status": "Dataset error"})
             st.error(f"Dataset error: {exc}")
             st.markdown(data_loader.missing_data_message(data_loader.describe_dataset(data_dir)))
             st.stop()
         except Exception as exc:  # surfaced, never hidden
+            ui.page_header(title, subtitle, {"Status": "Pipeline error"})
             st.error(f"The analysis pipeline failed: {type(exc).__name__}: {exc}")
             st.exception(exc)
             st.stop()
 
     summary = ctx.metrics.summary
-    ui.masthead({
-        "period": f"{summary['first_order_date']:%b %Y} – {summary['as_of_date']:%b %Y}",
-        "as_of": f"{summary['as_of_date']:%d %b %Y}",
-    })
+    quality_label = ("All checks passed" if ctx.quality.passed
+                     else f"{len(ctx.quality.failures)} check(s) failed")
+    ui.page_header(
+        title, subtitle,
+        {
+            "Observation window": f"{summary['first_order_date']:%b %Y} – "
+                                  f"{summary['as_of_date']:%b %Y}",
+            "Recency as of": f"{summary['as_of_date']:%d %b %Y}",
+            "Data quality": quality_label,
+        },
+    )
 
     if not ctx.quality.passed:
         ui.callout(
-            f"{len(ctx.quality.failures)} data quality check(s) failed. Results may be unreliable — "
-            "see *Methodology & Data Quality*.", "danger", "Quality warning")
+            f"{len(ctx.quality.failures)} data quality check(s) failed. Results may be "
+            "unreliable — see *Methodology*.", "risk", "Quality warning")
 
-    PAGES[page](ctx)
+    PAGES[page][0](ctx)
 
-    st.markdown('<hr class="divider">', unsafe_allow_html=True)
     st.markdown(
-        f'<div class="muted-note">Historical retrospective analysis of the public '
+        f'<div class="note" style="margin-top:34px;border-top:1px solid {settings.PALETTE["line"]};'
+        f'padding-top:14px">Historical retrospective analysis of the public '
         f'<a href="{settings.DATASET_SOURCE_URL}" target="_blank">Brazilian E-Commerce Public '
         f'Dataset by Olist</a> ({settings.DATASET_LICENSE}). Independent case study — not '
-        f'affiliated with Olist. All figures are computed from the loaded data; no value is '
-        f'hardcoded.</div>',
+        f'affiliated with Olist. Every figure is computed from the loaded data at run time; '
+        f'nothing is hardcoded.</div>',
         unsafe_allow_html=True,
     )
 

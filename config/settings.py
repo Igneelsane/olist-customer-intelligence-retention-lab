@@ -183,30 +183,40 @@ CURRENCY_CODE = "BRL"
 # 10. Presentation
 # ---------------------------------------------------------------------------
 
+#
+# A restrained, single-accent palette. Colour carries meaning rather than
+# decoration: ``primary`` marks the one thing the eye should land on, the warm
+# neutrals carry structure, and the three risk tones are reserved for
+# statements about retention risk. Keys are stable so every chart and page
+# keeps rendering from the same tokens.
+
 PALETTE = {
-    "ink": "#0F172A",
-    "slate": "#475569",
-    "muted": "#94A3B8",
-    "line": "#E2E8F0",
-    "surface": "#FFFFFF",
-    "background": "#F6F8FB",
-    "primary": "#1D4ED8",
-    "primary_soft": "#DBEAFE",
-    "teal": "#0F766E",
-    "amber": "#B45309",
-    "rose": "#BE123C",
-    "violet": "#6D28D9",
-    "green": "#15803D",
+    "ink": "#1A1A17",          # near-black text
+    "slate": "#5A5A53",        # body text
+    "muted": "#8C8B83",        # captions, axis labels
+    "line": "#E5E2DC",         # hairlines and table borders
+    "line_soft": "#F0EDE8",    # internal dividers
+    "surface": "#FFFFFF",      # cards / chart plates
+    "surface_soft": "#F4F2EE", # quiet fills
+    "background": "#FAF9F6",   # warm off-white canvas
+    "primary": "#1F4D3F",      # deep pine accent
+    "primary_soft": "#E9EFEC",
+    "teal": "#3E7361",
+    "amber": "#8A6A2F",
+    "rose": "#9B3B2F",
+    "violet": "#4A5A6B",
+    "green": "#2E6B4F",
 }
 
+# Seven muted tones, ordered from the most valuable segment to the least active.
 SEGMENT_COLORS = {
-    "High-Value Active Repeat": "#0F766E",
-    "Active Repeat": "#1D4ED8",
-    "Lapsing Repeat": "#B45309",
-    "Recent One-Time Buyer": "#6D28D9",
-    "Dormant One-Time Buyer": "#64748B",
-    "Long Inactive": "#BE123C",
-    "New / Insufficient History": "#94A3B8",
+    "High-Value Active Repeat": "#1F4D3F",
+    "Active Repeat": "#4E7F6D",
+    "Lapsing Repeat": "#8A6A2F",
+    "Recent One-Time Buyer": "#5B6B7A",
+    "Dormant One-Time Buyer": "#9A9A90",
+    "Long Inactive": "#9B3B2F",
+    "New / Insufficient History": "#C6C3B9",
 }
 
 APP_TITLE = "Customer Intelligence & Retention Lab"
