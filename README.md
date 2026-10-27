@@ -325,8 +325,13 @@ jupyter lab notebooks/01_exploratory_analysis.ipynb
 
 | What | Where | Status |
 |---|---|---|
+| **Live dashboard** | **https://olist-customer-intelligence-retenti.vercel.app** | deployed from this repository |
 | Full application (6 pages, Streamlit) | Streamlit Community Cloud — free, native, no code change | deployable; sleeps when idle |
-| Public interface on Vercel | `deploy/vercel/` — Flask function + static dashboard | built and verified locally; see below |
+
+The live dashboard is the Vercel build in `deploy/vercel/`: a Flask function that recomputes the
+metrics on every request from a shipped, anonymised derived table, plus a static page that
+renders only what the function returns. Its figures match the pandas pipeline exactly
+(`/api/analytics?view=health` → 96,478 orders / 93,358 customers).
 
 Streamlit **cannot** run on Vercel: Vercel Functions are request-scoped and cannot hold the
 persistent WebSocket a Streamlit session needs. Rather than ship a screenshot site dressed up as
@@ -337,8 +342,8 @@ when the API is unavailable).
 
 The deployed numbers were cross-checked against the pandas pipeline on the real dataset — repeat
 rate, cohort retention, Gini, segment sizes, service base rates and Cramér's V all agree — and
-the dashboard passed 31 browser checks. Full details, endpoint list, payload description,
-platform limits and the remaining publication steps are in
+the live site passed 28 browser checks (all five tabs, every table, both failure paths, zero
+console errors). Endpoint list, payload description, platform limits and redeploy steps are in
 [`deploy/vercel/README.md`](deploy/vercel/README.md).
 
 ---
@@ -367,11 +372,10 @@ the real analytics function on a local server:
 
 | View | File |
 |---|---|
-| Overview (KPIs, Lorenz curve, monthly activity) | `deploy_overview.png` |
-| Retention cohorts (heatmap, pooled rates, time-to-second) | `deploy_retention.png` |
-| Segments | `deploy_segments.png` |
-| Service & repeat | `deploy_service.png` |
-| Failure state when the API is unreachable | `deploy_api_down.png` |
+| Overview — live site | `deploy_live_overview.png` |
+| Retention cohorts — live site | `deploy_live_retention.png` |
+| Methodology & integrity checks — live site | `deploy_live_methodology.png` |
+| Failure state when the API is unreachable — live site | `deploy_live_api_down.png` |
 
 ---
 

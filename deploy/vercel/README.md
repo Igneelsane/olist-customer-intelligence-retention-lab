@@ -179,12 +179,19 @@ If `health` returns 503, the payload did not make it into the bundle: check that
 | Cross-check against the pandas pipeline | done — every shared metric matches (table in §3) |
 | Browser test of the dashboard (31 checks, 0 console errors) | done |
 | Vercel project linked to the GitHub repository and built | done — framework Flask, root directory `deploy/vercel` |
-| Public access | requires one project setting, see below |
+| Public access | done — Deployment Protection disabled |
+| Verification against the live URL | done — all six views HTTP 200, 28 browser checks passed |
+
+Live: **https://olist-customer-intelligence-retenti.vercel.app**
+
+Note that automatic Git deployments are disabled on this project, so a push alone does not
+rebuild the site; use the redeploy command below (or enable Settings → Git → production
+deployments).
 
 ### If visitors see a login page
 
-The project has **Vercel Authentication** enabled, which redirects every request — including
-the API — to `vercel.com/login`. To make the site public:
+Vercel Authentication redirects every request — including the API — to `vercel.com/login`.
+If that ever comes back (new project, transferred repository), disable it:
 
 > Project → Settings → Deployment Protection → Vercel Authentication → **Disabled**
 
