@@ -188,3 +188,76 @@ thresholds are judgement calls · synthetic fixtures used only for tests.
    the double-counting guarantee.
 4. `src/cohort_analysis.py::build_cohort_table` and the exhaustive month-0 test —
    the censoring guarantee.
+
+---
+
+## 10. GitHub repository and Vercel deployment
+
+### 10.1 What is ready
+
+- A local git repository with a 13-commit history on `main` (the working tree is clean; nothing
+  is committed that should not be: no CSVs, no zip, no caches, no credentials — 69 tracked files).
+- The commit author is set to `Rohith Rockie George <rohithrockiegeorge@gmail.com>` locally. Change
+  it before pushing if you want a different attribution:
+  `git config user.name "…" && git config user.email "…"`.
+- `deploy/vercel/` contains the complete Vercel build: Flask function, static dashboard, exported
+  anonymised payload (committed on purpose, ~2.2 MB) and `vercel.json`.
+- The Vercel project `olist-customer-intelligence-retention-lab`
+  (`prj_XpuhhUAhMvcHoMaxs2wQiA89NV6d`) already exists on the account, with framework `flask` and
+  output directory `public`.
+
+### 10.2 Why the repository is not on GitHub yet (verified, not assumed)
+
+From the environment where the project was built:
+
+- `curl https://api.github.com/user` → **401**; no `gh` CLI; no SSH keys; no credential helper;
+  no `~/.netrc`; the GitHub connector is not available. `github.com` itself is reachable (200).
+- `https://api.github.com/repos/<user>/olist-customer-intelligence-retention-lab` → **404**, i.e.
+  the repository does not exist yet (checked before creating anything, as required).
+
+So no push can be performed from there, and no repository URL should be quoted until it exists.
+
+### 10.3 The one action needed from you (GitHub)
+
+Create an **empty public** repository named `olist-customer-intelligence-retention-lab` (no README,
+no .gitignore, no licence — the history already contains them), then from this project folder:
+
+```bash
+cd olist-customer-intelligence
+git remote add origin https://github.com/<your-username>/olist-customer-intelligence-retention-lab.git
+git push -u origin main
+```
+
+If you authenticate with HTTPS, use a personal access token via the git credential prompt or
+`gh auth login`; nothing needs to be shared with anyone in chat.
+
+Suggested repository description:
+
+> A real-data ecommerce customer intelligence and retention analytics platform using the Olist
+> public dataset, Python, customer segmentation, cohort retention analysis, and Streamlit.
+
+### 10.4 Then Vercel (two clicks + one setting)
+
+1. Vercel → **Add New → Project → Import** the repository.
+2. Root directory: `deploy/vercel`. Framework: **Flask** (auto-detected). Deploy.
+3. Project → Settings → **Deployment Protection → Vercel Authentication → Disabled**
+   (otherwise visitors, including `curl`, get a Vercel login page — confirmed on this account).
+4. Verify: `curl -s https://<url>/api/analytics?view=health` → `{"status":"ok","rows":96478,…}`.
+
+### 10.5 What was verified on the Vercel side already
+
+| Finding | Evidence |
+|---|---|
+| Deployments can be created through the tool/API | project created, two deployments accepted |
+| A Flask entrypoint named `api/analytics.py` **fails** the build | build log: `FLASK_ENTRYPOINT_NOT_FOUND`, entrypoint must be `api/index.py` (or `app.py`, `server.py`, …) → fixed by renaming |
+| `vercel.json` must be strict JSON | build error `invalid_vercel_json` when a comment line was present |
+| Deployment URLs are not public on this account | `GET /` returned `<title>Login – Vercel</title>` twice |
+| The 2.2 MB payload cannot be uploaded from the build environment | the deployment tool accepts inline file contents only; it also re-parses JSON-looking `data`, so even `vercel.json` cannot be sent that way |
+
+Not verified (needs the repository): the actual Vercel build of this code *with* the data payload,
+and the live URL serving real numbers. Do not claim otherwise until step 10.4 is done.
+
+### 10.6 Cost
+
+Everything used is on free tiers: GitHub public repositories and the Vercel Hobby plan. No paid
+service, domain or plan upgrade is involved, and none should be enabled without your approval.
